@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CensorCore – Official Site</title>
+  <link rel="icon" type="image/svg+xml" href="CensorCore.svg">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    /* NAVIGATION */
+    nav {
+      background: #333;
+      padding: 12px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 20px;
+      text-decoration: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* PAGE SECTIONS */
+    .page {
+      display: none;
+      padding-bottom: 40px;
+    }
+
+    .active {
+      display: block;
+    }
+
+    /* HOME PAGE */
+    header {
+      background: #222;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    header img.logo {
+      width: 90px;
+      height: 90px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    /* DEMO */
+    #demo-box {
+      margin-top: 20px;
+      padding: 20px;
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    input {
+      width: 70%;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      background: #222;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #444;
+    }
+
+    /* DOCUMENTATION PAGE */
+    #docs-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    #docs-nav {
+      background: white;
+      padding: 15px;
+      border-bottom: 1px solid #ccc;
+      position: sticky;
+      top: 50px;
+      z-index: 900;
+    }
+
+    #docs-nav a {
+      margin-right: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #333;
+      text-decoration: none;
+    }
+
+    #docs-nav a:hover {
+      text-decoration: underline;
+    }
+
+    pre {
+      background: #eee;
+      padding: 10px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+
+    /* VERSIONS PAGE */
+    #versions-container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .version-entry {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .version-entry a {
+      font-weight: bold;
+      color: #0066cc;
+      text-decoration: none;
+    }
+
+    .version-entry a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+      background: #eee;
+    }
+  </style>
+</head>
+
+<body>
+
+<nav>
+  <a onclick="showPage('home')">Home</a>
+  <a onclick="showPage('demo')">Live Demo</a>
+  <a onclick="showPage('docs')">Documentation</a>
+  <a onclick="showPage('versions')">Versions</a>
+</nav>
+
+<!-- HOME PAGE -->
+<div id="home" class="page active">
+  <header>
+    <img class="logo" src="CensorCore.svg" alt="CensorCore Logo">
+    <h1>CensorCore</h1>
+    <p>A lightweight JavaScript library for filtering explicit or inappropriate text.</p>
+  </header>
+
+  <div class="container">
+    <h2>Overview</h2>
+    <p>
+      CensorCore is a lightweight JavaScript library for detecting explicit or inappropriate text
+      using a centralized JSON wordlist. It integrates with a single script tag and one function call.
+    </p>
+
+    <h3>Features</h3>
+    <ul>
+      <li>Zero configuration setup</li>
+      <li>Shared JSON wordlist loaded from CDN</li>
+      <li>Efficient whole‑word matching</li>
+      <li>Minimal and predictable API</li>
+      <li>No DOM modification or event interception</li>
+      <li>Full control retained by the integrating developer</li>
+    </ul>
+
+    <p>
+  View the full project on GitHub:
+  <br>
+  <a href="https://github.com/DerrickRichard/CensorCore-Library" target="_blank" style="display:inline-flex; align-items:center; gap:8px;">
+    <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="30" alt="GitHub Logo">
+    <span>CensorCore Repository</span>
+  </a>
+</p>
+  </div>
+</div>
+
+<!-- DEMO PAGE -->
+<div id="demo" class="page">
+  <div class="container">
+    <h2>Live Demo</h2>
+    <p>Type a message below. If it contains a blocked word, it will be rejected.</p>
+
+    <div id="demo-box">
+      <input id="demo-input" type="text" placeholder="Type a message..." />
+      <button onclick="sendDemo()">Send</button>
+
+      <div id="demo-output" style="margin-top:20px; font-size:18px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- DOCUMENTATION PAGE -->
+<div id="docs" class="page">
+  <div id="docs-container">
+
+    <div id="docs-nav">
+      <a onclick="scrollToSection('overview')">Overview</a>
+      <a onclick="scrollToSection('features')">Features</a>
+      <a onclick="scrollToSection('installation')">Installation</a>
+      <a onclick="scrollToSection('usage')">Usage</a>
+      <a onclick="scrollToSection('wordlist')">Wordlist</a>
+      <a onclick="scrollToSection('api')">API</a>
+      <a onclick="scrollToSection('design')">Design</a>
+      <a onclick="scrollToSection('developer')">Developer</a>
+      <a onclick="scrollToSection('versions-doc')">Versions</a>
+      <a onclick="scrollToSection('license')">License</a>
+    </div>
+
+    <h2 id="overview">Overview</h2>
+    <p>CensorCore is a lightweight JavaScript library for detecting explicit or inappropriate text using a centralized JSON wordlist.</p>
+
+    <h2 id="features">Features</h2>
+    <ul>
+      <li>Zero configuration setup</li>
+      <li>Shared JSON wordlist loaded from CDN</li>
+      <li>Efficient whole word matching</li>
+      <li>Minimal and predictable API</li>
+      <li>No DOM modification or event interception</li>
+      <li>Full control retained by the integrating developer</li>
+    </ul>
+
+    <h2 id="installation">Installation</h2>
+    <pre>&lt;script src="https://cdn.jsdelivr.net/gh/DerrickRichard/CensorCore-Library/CensorCore.js"&gt;&lt;/script&gt;</pre>
+
+    <h2 id="usage">Usage</h2>
+    <pre>
+if (censor.isBlocked(text)) {
+  alert("Message blocked: Inappropriate Content");
+  return;
+}
+    </pre>
+
+    <h2 id="wordlist">Wordlist Structure</h2>
+    <pre>{
+  "profanity": ["word1", "word2"],
+  "hate_speech": ["word3", "word4"],
+  "harassment": ["word5", "word6"]
+}</pre>
+
+    <h2 id="api">API Reference</h2>
+    <p><strong>censor.isBlocked(text: string): boolean</strong></p>
+
+    <h2 id="design">Design Philosophy</h2>
+    <p>CensorCore avoids modifying the DOM and provides a predictable function for message filtering.</p>
+
+    <h2 id="developer">About the Developer</h2>
+    <p>
+      Created by Derrick Richard.<br>
+      <a href="https://dev.to/derrickrichard" target="_blank">dev.to</a><br>
+      <a href="https://derrickrichard.github.io/profile/" target="_blank">Profile</a>
+    </p>
+
+    <h2 id="versions-doc">Versions</h2>
+    <p>v1.0.0 — Initial release</p>
+
+    <h2 id="license">License</h2>
+    <p>Released under the MIT License.</p>
+
+  </div>
+</div>
+
+<!-- VERSIONS PAGE -->
+<div id="versions" class="page">
+  <div id="versions-container">
+    <h2>Version History</h2>
+    <p>All published versions of CensorCore, with links to their GitHub releases.</p>
+
+    <div class="version-entry">
+      <h3>v1.0.0 - Initial Release</h3>
+      <p>Initial release with basic filtering functionality and a basic JSON wordlist.</p>
+      <a href="https://github.com/DerrickRichard/CensorCore-Library/releases/tag/v1.0.0" target="_blank">
+        View Release on GitHub
+      </a>
+    </div>
+
+    <!-- Add future versions here -->
+  </div>
+</div>
+
+<footer>
+  CensorCore © 2025 — MIT Licensed
+</footer>
+
+<script src="https://cdn.jsdelivr.net/gh/DerrickRichard/CensorCore-Library/CensorCore.js"></script>
+
+<script>
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function scrollToSection(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function sendDemo() {
+    const input = document.getElementById("demo-input");
+    const output = document.getElementById("demo-output");
+    const text = input.value.trim();
+
+    if (!text) {
+      output.textContent = "Please enter a message.";
+      return;
+    }
+
+    if (censor.isBlocked(text)) {
+      output.textContent = "Message blocked: Inappropriate Content";
+      output.style.color = "red";
+      return;
+    }
+
+    output.textContent = "Message sent: " + text;
+    output.style.color = "green";
+    input.value = "";
+  }
+</script>
+
+</body>
+</html>
