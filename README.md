@@ -1,7 +1,7 @@
 CensorCore
 ==========
 <p><strong><span style="color:red">⚠️ WARNING: The <code>wordlist.json</code> file contains explicit language, slurs, and other harmful content. View it at your own risk.</span></strong></p>
-
+==========
 CensorCore is a lightweight JavaScript library for detecting explicit or inappropriate text using a centralized JSON wordlist. It is designed for straightforward integration: include a single script tag and call one function within your message handling logic. CensorCore is suitable for chat applications, comment systems, forms, or any environment where user generated text requires screening.
 
 Features
