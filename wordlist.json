@@ -1,5 +1,14 @@
 {
-  "profanity": [Words Coming Soon!],
-  "hate_speech": [Words Coming Soon!],
-  "harassment": [Words Coming Soon!]
+  "profanity": ["fuck", "bitch", "ass", "asshole", "bastard", "shit"],
+  "hate_speech": ["nigger", "nigga"],
+  "harassment": ["dumbass", "fag", "jackass"],
+  "sexual_content": ["sex", "porn", "dick", "penis"],
+  "violence": ["Kill", "murder", "dead body"],
+  "self_harm": ["kms", "suicide", "kill myself"],
+  "drugs": ["meth", "drugs", "Marijuana", "cocaine", "Adderall", ],
+  "weapons": ["gun", "knife"],
+  "extremism": ["Words Coming Soon!"],
+  "terrorism": ["9/11", "bin laden", "terrorist"],
+  "disallowed_phrases": [],
+  "custom": []
 }
