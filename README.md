@@ -24,7 +24,7 @@ Installation
 
 To install CensorCore, include the script tag in the <head> or just before the closing <body> tag of your HTML file to ensure it loads before your application code runs:
 
-<script src="https://cdn.jsdelivr.net/gh/DerrickRichard/CensorCore-Library@1.0.0/CensorCore.js"></script>
+`<script src="https://cdn.jsdelivr.net/gh/DerrickRichard/CensorCore-Library@1.0.0/CensorCore.js"></script>`
 
 After the script loads, a global object named censor will be available for use in your JavaScript.
 
