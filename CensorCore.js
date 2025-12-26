@@ -1,42 +1,64 @@
 // CensorCore.js
 // Copyright (c) 2025 Derrick Richard
-// CensorCore is a lightweight, zero‑setup message filtering library.
+// Lightweight, zero-setup message filtering library.
 // Source: https://github.com/DerrickRichard/CensorCore-Library
 // Licensed under the MIT License
 // Author: Derrick Richard (https://derrickrichard.github.io/profile/)
 // Weekly programming articles: https://dev.to/derrickrichard
 
 (function () {
-  let bannedWords = [];
+  let patterns = [];        // Precompiled regex patterns
+  let ready = false;        // True when wordlist is loaded
+  let loadFailed = false;   // True if JSON fails to load
 
-  // Public API object
+  // Public API
   const censor = {
     isBlocked(text) {
-      return containsExplicit(text);
+      if (!ready) return false;
+      if (!text) return false;
+
+      const normalized = text
+        .trim()
+        .toLowerCase()
+        .normalize("NFKC");
+
+      return patterns.some(p => p.test(normalized));
+    },
+
+    isReady() {
+      return ready;
+    },
+
+    isFailed() {
+      return loadFailed;
     }
   };
 
-  // Expose globally
-  window.censor = censor;
+  // Expose globally and prevent modification
+  window.censor = Object.freeze(censor);
 
-  // Load JSON file from jsDelivr CDN
+  // Load JSON wordlist
   fetch("https://cdn.jsdelivr.net/gh/DerrickRichard/CensorCore-Library@main/wordlist.json")
     .then(res => res.json())
     .then(data => {
-      // Flatten all categories into one list
-      bannedWords = Object.values(data).flat().map(w => w.toLowerCase());
+      const words = Object.values(data)
+        .flat()
+        .map(w => w.toLowerCase());
+
+      // Precompile regex patterns for speed
+      patterns = words.map(w =>
+        new RegExp("\\b" + escapeRegex(w) + "\\b", "i")
+      );
+
+      ready = true;
     })
     .catch(() => {
-      console.error("Could not load wordlist.json");
+      loadFailed = true;
+      console.error("CensorCore: Could not load wordlist.json");
     });
 
-  function containsExplicit(text) {
-    if (!text) return false;
-    const lower = text.toLowerCase();
-
-    return bannedWords.some(word => {
-      const pattern = new RegExp("\\b" + word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "i");
-      return pattern.test(lower);
-    });
+  // Escape regex special characters
+  function escapeRegex(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
 })();
