@@ -24,7 +24,7 @@ Installation
 
 To install CensorCore, include the script tag in the <head> tag of your HTML file to ensure it loads before your application code runs:
 
-`<script src="https://cdn.jsdelivr.net/gh/DerrickRichard/CensorCore-Library@1.0.0/CensorCore.js"></script>`
+`<script src="https://cdn.jsdelivr.net/gh/DerrickRichard/CensorCore-Library@latest/CensorCore.js"></script>`
 
 The library will load after your code runs if you put it near the closing `<html>` tag, causing it to fail.
 
