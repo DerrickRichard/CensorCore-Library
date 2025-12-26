@@ -116,11 +116,11 @@ CensorCore loads a JSON file structured by category:
 ```json
 {
 
-  "profanity": ["word1",  "word2"],
+"profanity": ["word1",  "word2"],
 
-  "hate_speech": ["word3",  "word4"],
+"hate_speech": ["word3",  "word4"],
 
-  "harassment": ["word5",  "word6"]
+"harassment": ["word5",  "word6"]
 
 }
 ```
