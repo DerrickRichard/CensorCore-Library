@@ -158,6 +158,7 @@ Versions
 --------
 
 -   v1.0.0: Initial release with basic filtering functionality and a basic JSON wordlist.
+-   v1.1.0: CensorCore v1.1.0 makes the filtering engine faster and more dependable. The wordlist is now processed ahead of time, the matching is quicker, and the library handles text in a more consistent way. The code has also been cleaned up so it is easier to follow and maintain. This update adds a couple of small helper functions that let you check whether the wordlist has loaded or if something went wrong while loading it. The public API is locked so it cannot be changed by accident, and the library behaves more safely if it is used before it finishes loading. Overall, this release makes CensorCore smoother and more reliable without changing how you already use it.
 
 License
 -------
