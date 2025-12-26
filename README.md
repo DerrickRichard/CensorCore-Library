@@ -33,15 +33,15 @@ Make sure your internet connection allows loading scripts from the CDN[  ](https
 Inside your logic to send messages, add this inside the function:
 
 ```JavaScript
- //Block explicit messages using the CensorCore library
+//Block explicit messages using the CensorCore library
 
-      if  (censor.isBlocked(text))  {
+     if  (censor.isBlocked(text))  {
 
-        alert("Message blocked: Inappropriate Content");
+        alert("Message blocked: Inappropriate Content");
 
-        return;
+        return;
 
-      }
+     }
 ```
 Your entire send function should look similar to this:
 
