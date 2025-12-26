@@ -20,7 +20,7 @@
   window.censor = censor;
 
   // Load JSON file from jsDelivr CDN
-  fetch("https://cdn.jsdelivr.net/gh/DerrickRichard/CensorCore-Library/wordlist.json")
+  fetch("https://cdn.jsdelivr.net/gh/DerrickRichard/CensorCore-Library@main/wordlist.json")
     .then(res => res.json())
     .then(data => {
       // Flatten all categories into one list
