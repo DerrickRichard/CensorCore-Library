@@ -113,7 +113,7 @@ Wordlist Structure
 
 CensorCore loads a JSON file structured by category:
 
-```JSON
+```json
 {
 
   "profanity":  ["word1",  "word2"],
