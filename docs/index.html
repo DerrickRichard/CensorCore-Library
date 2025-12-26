@@ -12,6 +12,7 @@
       font-family: Arial, sans-serif;
       background: #f5f5f5;
       color: #222;
+      line-height: 1.5;
     }
 
     /* NAVIGATION */
@@ -30,6 +31,7 @@
       text-decoration: none;
       font-weight: bold;
       cursor: pointer;
+      display: inline-block;
     }
 
     nav a:hover {
@@ -82,6 +84,7 @@
     input, button {
       padding: 10px;
       font-size: 16px;
+      box-sizing: border-box;
     }
 
     input {
@@ -114,7 +117,7 @@
       padding: 15px;
       border-bottom: 1px solid #ccc;
       position: sticky;
-      top: 50px;
+      top: 45px;
       z-index: 900;
     }
 
@@ -132,9 +135,10 @@
 
     pre {
       background: #eee;
-      padding: 10px;
+      padding: 15px;
       border-radius: 6px;
       overflow-x: auto;
+      font-size: 14px;
     }
 
     /* VERSIONS PAGE */
@@ -159,15 +163,69 @@
       text-decoration: none;
     }
 
-    .version-entry a:hover {
-      text-decoration: underline;
-    }
-
     footer {
       text-align: center;
       padding: 20px;
       margin-top: 40px;
       background: #eee;
+    }
+
+    /* --- MOBILE STYLES --- */
+    @media (max-width: 768px) {
+      nav {
+        padding: 10px 5px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      nav a {
+        margin: 0 5px;
+        font-size: 14px;
+      }
+
+      .container, #versions-container, #docs-container {
+        margin: 15px;
+        padding: 20px;
+        width: auto;
+      }
+
+      header {
+        padding: 40px 15px;
+      }
+
+      header h1 {
+        font-size: 24px;
+      }
+
+      input {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      /* Make Docs Nav swipeable on mobile instead of stacking */
+      #docs-nav {
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        padding: 10px 15px;
+        top: 80px; /* Adjusted for wrapping main nav height */
+      }
+
+      #docs-nav::-webkit-scrollbar {
+        display: none;
+      }
+
+      #docs-nav a {
+        font-size: 14px;
+        margin-right: 15px;
+      }
     }
   </style>
 </head>
@@ -210,7 +268,7 @@
     <p>
   View the full project on GitHub:
   <br>
-  <a href="https://github.com/DerrickRichard/CensorCore-Library" target="_blank" style="display:inline-flex; align-items:center; gap:8px;">
+  <a href="https://github.com/DerrickRichard/CensorCore-Library" target="_blank" style="display:inline-flex; align-items:center; gap:8px; margin-top: 10px;">
     <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="30" alt="GitHub Logo">
     <span>CensorCore Repository</span>
   </a>
@@ -226,30 +284,28 @@
 
     <div id="demo-box">
       <input id="demo-input" type="text" placeholder="Type a message..." />
-      <button onclick="sendDemo()">Send</button>
+      <button onclick="sendDemo()">Send Message</button>
 
-      <div id="demo-output" style="margin-top:20px; font-size:18px;"></div>
+      <div id="demo-output" style="margin-top:20px; font-size:18px; font-weight:bold;"></div>
     </div>
   </div>
 </div>
 
 <!-- DOCUMENTATION PAGE -->
 <div id="docs" class="page">
+  <div id="docs-nav">
+    <a onclick="scrollToSection('overview')">Overview</a>
+    <a onclick="scrollToSection('features')">Features</a>
+    <a onclick="scrollToSection('installation')">Installation</a>
+    <a onclick="scrollToSection('usage')">Usage</a>
+    <a onclick="scrollToSection('wordlist')">Wordlist</a>
+    <a onclick="scrollToSection('api')">API</a>
+    <a onclick="scrollToSection('design')">Design</a>
+    <a onclick="scrollToSection('developer')">Developer</a>
+    <a onclick="scrollToSection('license')">License</a>
+  </div>
+
   <div id="docs-container">
-
-    <div id="docs-nav">
-      <a onclick="scrollToSection('overview')">Overview</a>
-      <a onclick="scrollToSection('features')">Features</a>
-      <a onclick="scrollToSection('installation')">Installation</a>
-      <a onclick="scrollToSection('usage')">Usage</a>
-      <a onclick="scrollToSection('wordlist')">Wordlist</a>
-      <a onclick="scrollToSection('api')">API</a>
-      <a onclick="scrollToSection('design')">Design</a>
-      <a onclick="scrollToSection('developer')">Developer</a>
-      <a onclick="scrollToSection('versions-doc')">Versions</a>
-      <a onclick="scrollToSection('license')">License</a>
-    </div>
-
     <h2 id="overview">Overview</h2>
     <p>CensorCore is a lightweight JavaScript library for detecting explicit or inappropriate text using a centralized JSON wordlist.</p>
 
@@ -259,11 +315,10 @@
       <li>Shared JSON wordlist loaded from CDN</li>
       <li>Efficient whole word matching</li>
       <li>Minimal and predictable API</li>
-      <li>No DOM modification or event interception</li>
-      <li>Full control retained by the integrating developer</li>
     </ul>
 
     <h2 id="installation">Installation</h2>
+    <p>Include the script in your HTML:</p>
     <pre>&lt;script src="https://cdn.jsdelivr.net/gh/DerrickRichard/CensorCore-Library/CensorCore.js"&gt;&lt;/script&gt;</pre>
 
     <h2 id="usage">Usage</h2>
@@ -283,6 +338,7 @@ if (censor.isBlocked(text)) {
 
     <h2 id="api">API Reference</h2>
     <p><strong>censor.isBlocked(text: string): boolean</strong></p>
+    <p>Returns true if any word in the string matches the loaded wordlist.</p>
 
     <h2 id="design">Design Philosophy</h2>
     <p>CensorCore avoids modifying the DOM and provides a predictable function for message filtering.</p>
@@ -290,16 +346,11 @@ if (censor.isBlocked(text)) {
     <h2 id="developer">About the Developer</h2>
     <p>
       Created by Derrick Richard.<br>
-      <a href="https://dev.to/derrickrichard" target="_blank">dev.to</a><br>
-      <a href="https://derrickrichard.github.io/profile/" target="_blank">Profile</a>
+      <a href="https://derrickrichard.github.io/profile/" target="_blank">Personal Profile</a>
     </p>
-
-    <h2 id="versions-doc">Versions</h2>
-    <p>v1.0.0 — Initial release</p>
 
     <h2 id="license">License</h2>
     <p>Released under the MIT License.</p>
-
   </div>
 </div>
 
@@ -307,7 +358,7 @@ if (censor.isBlocked(text)) {
 <div id="versions" class="page">
   <div id="versions-container">
     <h2>Version History</h2>
-    <p>All published versions of CensorCore, with links to their GitHub releases.</p>
+    <p>All published versions of CensorCore.</p>
 
     <div class="version-entry">
       <h3>v1.0.0 - Initial Release</h3>
@@ -316,35 +367,22 @@ if (censor.isBlocked(text)) {
         View Release on GitHub
       </a>
     </div>
-
-    <!-- Add future versions here -->
   </div>
 </div>
 
-  <div id="dev-page" class="page">
+<!-- DEVELOPER PAGE -->
+<div id="dev-page" class="page">
   <div class="container">
     <h2>About the Developer</h2>
-
     <p>
       <strong>Derrick Richard</strong> is a student developer from Poth, Texas (Class of 2029)
-      who specializes in building lightweight, practical web tools. His work focuses on clean
-      interfaces, efficient JavaScript, and browser‑based utilities that solve real problems
-      without unnecessary complexity.
+      who specializes in building lightweight, practical web tools.
     </p>
 
     <h3>Programming Focus</h3>
     <ul>
       <li><strong>Languages:</strong> JavaScript, HTML, CSS, Java, Python, JSON</li>
-      <li><strong>Strengths:</strong> UI logic, lightweight libraries, browser‑based tools</li>
-      <li><strong>Approach:</strong> simplicity, clarity, and developer‑friendly design</li>
-    </ul>
-
-    <h3>Notable Projects</h3>
-    <ul>
-      <li><strong>CensorCore</strong> – A minimal text‑filtering library for web apps</li>
-      <li><strong>FileLock</strong> – Encrypt files into self‑unlocking HTML pages</li>
-      <li><strong>FileProof</strong> – Browser‑based file integrity checker</li>
-      <li><strong>Storm Generation</strong> – Classroom group generator and randomizer</li>
+      <li><strong>Strengths:</strong> UI logic, lightweight libraries</li>
     </ul>
 
     <h3>Links</h3>
@@ -370,7 +408,17 @@ if (censor.isBlocked(text)) {
   }
 
   function scrollToSection(id) {
-    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    const element = document.getElementById(id);
+    const offset = 100; 
+    const bodyRect = document.body.getBoundingClientRect().top;
+    const elementRect = element.getBoundingClientRect().top;
+    const elementPosition = elementRect - bodyRect;
+    const offsetPosition = elementPosition - offset;
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
+    });
   }
 
   function sendDemo() {
@@ -380,16 +428,17 @@ if (censor.isBlocked(text)) {
 
     if (!text) {
       output.textContent = "Please enter a message.";
+      output.style.color = "#555";
       return;
     }
 
-    if (censor.isBlocked(text)) {
-      output.textContent = "Message blocked: Inappropriate Content";
+    if (typeof censor !== 'undefined' && censor.isBlocked(text)) {
+      output.textContent = "✖ Message blocked: Inappropriate Content";
       output.style.color = "red";
       return;
     }
 
-    output.textContent = "Message sent: " + text;
+    output.textContent = "✔ Message sent: " + text;
     output.style.color = "green";
     input.value = "";
   }
