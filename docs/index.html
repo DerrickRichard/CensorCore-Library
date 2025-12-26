@@ -237,7 +237,7 @@
   <a onclick="showPage('home')">Home</a>
   <a onclick="showPage('demo')">Live Demo</a>
   <a onclick="showPage('docs')">Documentation</a>
-  <a onclick="showPage('versions')">Versions</a>
+  <a onclick="showPage('versionspage')">Versions</a>
   <a onclick="showPage('dev-page')">Developer</a>
 </nav>
 
@@ -456,7 +456,7 @@ function sendMessage() {
 </div>
 
 <!-- VERSIONS PAGE -->
-<div id="versions" class="page">
+<div id="versionspage" class="page">
   <div id="versions-container">
     <h2>Version History</h2>
     <p>All published versions of CensorCore.</p>
@@ -469,7 +469,7 @@ function sendMessage() {
       </a>
     </div>
      <div class="version-entry">
-      <h3>v1.1.0 – Performance and Reliability Update</h3>
+      <h3>v1.1.0 - Performance and Reliability Update</h3>
       <p>CensorCore v1.1.0 makes the filtering engine faster and more dependable. The wordlist is now processed ahead of time, the matching is quicker, and the library handles text in a more consistent way. The code has also been cleaned up so it is easier to follow and maintain.
 
 This update adds a couple of small helper functions that let you check whether the wordlist has loaded or if something went wrong while loading it. The public API is locked so it cannot be changed by accident, and the library behaves more safely if it is used before it finishes loading. Overall, this release makes CensorCore smoother and more reliable without changing how you already use it.</p>
