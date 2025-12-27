@@ -228,6 +228,49 @@
         margin-right: 15px;
       }
     }
+
+        /* --- LINK STYLES --- */
+    /* General links in content */
+    a {
+      color: #0066cc;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease-in-out;
+    }
+
+    a:hover {
+      color: #004499;
+      text-decoration: underline;
+    }
+
+    /* Specific adjustment for links in the dark header */
+    header a {
+      color: #66b3ff;
+    }
+
+    header a:hover {
+      color: #99ccff;
+    }
+
+    /* Keep navigation links white as originally intended */
+    nav a {
+      color: white;
+    }
+
+    /* Style for the GitHub link in the Home section */
+    .container a[style*="display:inline-flex"] {
+      padding: 8px 12px;
+      background: #f0f0f0;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      color: #333;
+    }
+
+    .container a[style*="display:inline-flex"]:hover {
+      background: #e5e5e5;
+      text-decoration: none;
+      border-color: #bbb;
+    }
   </style>
 </head>
 
@@ -246,6 +289,7 @@
   <header>
     <img class="logo" src="CensorCore.svg" alt="CensorCore Logo">
     <h1>CensorCore</h1>
+    <h2>Official Moderation System Of <a href="https://derrickrichard.github.io/CoreChat/" target="_blank" rel="noopener noreferrer">CoreChat</a></h2>
     <p>A lightweight JavaScript library for filtering explicit or inappropriate text.</p>
   </header>
 
