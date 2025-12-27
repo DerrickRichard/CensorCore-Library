@@ -6,7 +6,7 @@
   "violence": ["Kill", "murder", "dead body"],
   "self_harm": ["kms", "suicide", "kill myself"],
   "drugs": ["meth", "drugs", "Marijuana", "cocaine", "Adderall"],
-  "weapons": ["gun", "knife"],
+  "weapons": ["gun", "knife", "bomb"],
   "extremism": [],
   "terrorism": ["9/11", "bin laden", "terrorist"],
   "disallowed_phrases": [],
