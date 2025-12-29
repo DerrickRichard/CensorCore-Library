@@ -5,24 +5,92 @@
 // Licensed under the MIT License
 // Author: Derrick Richard (https://derrickrichard.github.io/profile/)
 // Weekly programming articles: https://dev.to/derrickrichard
+// v2.0 — Adds severity levels, phrase detection, custom rules, async events, and rich analyze() API.
 
 (function () {
-  let patterns = [];        // Precompiled regex patterns
-  let ready = false;        // True when wordlist is loaded
-  let loadFailed = false;   // True if JSON fails to load
+  let rules = [];
+  let ready = false;
+  let loadFailed = false;
+  const readyCallbacks = [];
+  const errorCallbacks = [];
+
+  // Default severity mapping for categories
+  const CATEGORY_SEVERITY = {
+    profanity: "medium",
+    hate_speech: "high",
+    harassment: "medium",
+    sexual_content: "high",
+    violence: "high",
+    self_harm: "high",
+    drugs: "medium",
+    weapons: "high",
+    extremism: "high",
+    terrorism: "high",
+    disallowed_phrases: "medium",
+    custom: "low",
+    default: "low"
+  };
 
   // Public API
   const censor = {
     isBlocked(text) {
-      if (!ready) return false;
-      if (!text) return false;
+      return this.analyze(text).blocked;
+    },
 
-      const normalized = text
-        .trim()
-        .toLowerCase()
-        .normalize("NFKC");
+    analyze(text) {
+      if (!ready || !text) {
+        return { blocked: false, matches: [] };
+      }
 
-      return patterns.some(p => p.test(normalized));
+      const normalized = normalizeText(text);
+      const matches = [];
+
+      for (const rule of rules) {
+        if (rule.pattern.test(normalized)) {
+          matches.push({
+            text: rule.text,
+            category: rule.category,
+            severity: rule.severity
+          });
+        }
+      }
+
+      if (matches.length === 0) {
+        return { blocked: false, matches: [] };
+      }
+
+      const severityOrder = { low: 1, medium: 2, high: 3 };
+      const highest = matches.reduce((a, b) =>
+        (severityOrder[b.severity] || 1) > (severityOrder[a.severity] || 1)
+          ? b
+          : a
+      );
+
+      return {
+        blocked: true,
+        severity: highest.severity,
+        category: highest.category,
+        matches
+      };
+    },
+
+    extend(customRules) {
+      if (!Array.isArray(customRules)) return;
+
+      for (const r of customRules) {
+        if (!r || !r.text) continue;
+
+        const text = String(r.text).toLowerCase();
+        const category = r.category || "custom";
+        const severity = r.severity || CATEGORY_SEVERITY[category] || "low";
+
+        rules.push({
+          text,
+          category,
+          severity,
+          pattern: buildPattern(text)
+        });
+      }
     },
 
     isReady() {
@@ -31,33 +99,71 @@
 
     isFailed() {
       return loadFailed;
+    },
+
+    onReady(callback) {
+      if (typeof callback !== "function") return;
+      if (ready) callback();
+      else readyCallbacks.push(callback);
+    },
+
+    onError(callback) {
+      if (typeof callback !== "function") return;
+      if (loadFailed) callback();
+      else errorCallbacks.push(callback);
     }
   };
 
-  // Expose globally and prevent modification
   window.censor = Object.freeze(censor);
 
   // Load JSON wordlist
   fetch("https://cdn.jsdelivr.net/gh/DerrickRichard/CensorCore-Library@main/wordlist.json")
     .then(res => res.json())
     .then(data => {
-      const words = Object.values(data)
-        .flat()
-        .map(w => w.toLowerCase());
+      const newRules = [];
 
-      // Precompile regex patterns for speed
-      patterns = words.map(w =>
-        new RegExp("\\b" + escapeRegex(w) + "\\b", "i")
-      );
+      for (const [category, list] of Object.entries(data || {})) {
+        const severity =
+          CATEGORY_SEVERITY[category] || CATEGORY_SEVERITY.default;
 
+        if (!Array.isArray(list)) continue;
+
+        for (const entry of list) {
+          if (!entry) continue;
+
+          const text = String(entry).toLowerCase();
+
+          newRules.push({
+            text,
+            category,
+            severity,
+            pattern: buildPattern(text)
+          });
+        }
+      }
+
+      rules = newRules;
       ready = true;
+      readyCallbacks.forEach(cb => cb());
     })
-    .catch(() => {
+    .catch(err => {
       loadFailed = true;
-      console.error("CensorCore: Could not load wordlist.json");
+      errorCallbacks.forEach(cb => cb(err));
+      console.error("CensorCore: Could not load wordlist.json", err);
     });
 
-  // Escape regex special characters
+  function normalizeText(text) {
+    return String(text)
+      .trim()
+      .toLowerCase()
+      .normalize("NFKC");
+  }
+
+  function buildPattern(text) {
+    const escaped = escapeRegex(text);
+    return new RegExp("\\b" + escaped + "\\b", "i");
+  }
+
   function escapeRegex(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
