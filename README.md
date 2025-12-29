@@ -7,11 +7,20 @@ CensorCore is a lightweight JavaScript library for detecting explicit, harmful, 
 
 Version 2.0 introduces a more advanced moderation engine with phrase detection, severity levels, async loading events, and a detailed `analyze()` API, while remaining fully backward‑compatible with the original `isBlocked()` function. CensorCore is suitable for chat applications, comment systems, forms, or any environment where user‑generated text requires screening.
 
-Features
+## Features
 
-- Zero‑configuration setup - Shared JSON wordlist loaded from CDN - Phrase detection (supports multi‑word entries) - Automatic severity mapping based on category - Minimal and predictable API (isBlocked + analyze) - Async lifecycle events (onReady, onError) - Optional custom rule extension - No DOM modification or event interception - Full control retained by the integrating developer
 
-Installation
+- Zero‑configuration setup 
+- Shared JSON wordlist loaded from CDN 
+- Phrase detection (supports multi‑word entries) 
+- Automatic severity mapping based on category 
+- Minimal and predictable API (isBlocked + analyze) 
+- Async lifecycle events (onReady, onError) 
+- Optional custom rule extension 
+- No DOM modification or event interception 
+- Full control retained by the integrating developer
+
+## Installation
 
 To install CensorCore, include the script tag in the `<head>` of your HTML file to ensure it loads before your application code runs:
 
@@ -30,7 +39,7 @@ Make sure your internet connection allows loading scripts from the CDN at:
 
 https://cdn.jsdelivr.net
 
-Basic Integration
+## Basic Integration
 
 Inside your message‑sending logic, add this check:
 
@@ -66,7 +75,7 @@ function sendMessage() {
 
 ```
 
-Advanced Usage (Version 2.0)
+## Advanced Usage (Version 2.0)
 
 Use the new `analyze()` API for detailed moderation results:
 
@@ -83,7 +92,7 @@ if (result.blocked) {
 
 ```
 
-Custom Rules
+## Custom Rules
 
 You can add your own rules without modifying the main wordlist:
 
@@ -96,37 +105,48 @@ censor.extend([
 
 ```
 
-Wordlist Structure
+## Wordlist Structure
 
 CensorCore loads a JSON file structured by category. Your actual wordlist includes categories such as:
 
-profanity hate_speech harassment sexual_content violence self_harm drugs weapons extremism terrorism disallowed_phrases custom
+- profanity 
+- hate_speech 
+- harassment 
+- sexual_content 
+- violence 
+- self_harm 
+- drugs 
+- weapons 
+- extremism 
+- terrorism 
+- disallowed_phrases 
+- custom
 
 Each category is automatically assigned a severity level (low, medium, or high). All categories are merged into a single internal rule engine.
 
 The CensorCore wordlist is curated solely by Derrick Richard to ensure consistency and quality. Community members cannot directly edit the wordlist. To request a new word or phrase, please use the Word Request section in the repository's Discussions page.
 
-API Reference
+## API Reference
 
-censor.isBlocked(text) Returns true if the text contains any blocked content.
+`censor.isBlocked(text)` -  Returns true if the text contains any blocked content.
 
-censor.analyze(text) Returns a detailed moderation result including: - whether the text is blocked - highest severity - category - all matched rules
+`censor.analyze(text)` Returns a detailed moderation result including: - whether the text is blocked - highest severity - category - all matched rules
 
-censor.extend(rules) Adds custom moderation rules at runtime.
+`censor.extend(rules)` - Adds custom moderation rules at runtime.
 
-censor.isReady() Returns true when the wordlist has finished loading.
+`censor.isReady()` - Returns true when the wordlist has finished loading.
 
-censor.isFailed() Returns true if the wordlist failed to load.
+`censor.isFailed()` - Returns true if the wordlist failed to load.
 
-censor.onReady(callback) Fires when the moderation engine is ready.
+`censor.onReady(callback)` - Fires when the moderation engine is ready.
 
-censor.onError(callback) Fires if the moderation engine fails to load.
+`censor.onError(callback)` - Fires if the moderation engine fails to load.
 
-Design Philosophy
+## Design Philosophy
 
 CensorCore avoids modifying the DOM, intercepting events, or altering UI behavior. Instead, it provides a predictable, developer‑controlled moderation function. This ensures transparency, stability, and compatibility across a wide range of applications.
 
-About the Developer
+## About the Developer
 
 CensorCore was created and is maintained by Derrick Richard, a high school developer focused on building practical, lightweight tools for the web.
 
@@ -136,14 +156,14 @@ More information about his work is available at: https://derrickrichard.github.i
 
 The CensorCore wordlist is curated solely by Derrick Richard to ensure consistency and quality. Community members cannot directly edit the wordlist. To request a new word or phrase, please submit a request in the Word Request section of the repository's Discussions page.
 
-Versions
+## Versions
 
-v1.0.0 -- Initial release with basic filtering functionality and a basic JSON wordlist.
+v1.0.0 - Initial release with basic filtering functionality and a basic JSON wordlist.
 
-v1.1.0 -- CensorCore v1.1.0 makes the filtering engine faster and more dependable. The wordlist is now processed ahead of time, the matching is quicker, and the library handles text in a more consistent way. The code has also been cleaned up so it is easier to follow and maintain. This update adds helper functions to check whether the wordlist has loaded or if something went wrong. The public API is locked to prevent accidental modification, and the library behaves more safely if used before loading finishes.
+v1.1.0 - CensorCore v1.1.0 makes the filtering engine faster and more dependable. The wordlist is now processed ahead of time, the matching is quicker, and the library handles text in a more consistent way. The code has also been cleaned up so it is easier to follow and maintain. This update adds helper functions to check whether the wordlist has loaded or if something went wrong. The public API is locked to prevent accidental modification, and the library behaves more safely if used before loading finishes.
 
-v2.0.0 -- CensorCore v2.0.0 is a major upgrade that introduces phrase detection, automatic severity levels, async lifecycle events, a detailed analyze() API, and custom rule support. The internal rule engine has been redesigned for clarity and flexibility while remaining fully backward‑compatible with the original isBlocked() function.
+v2.0.0 - CensorCore v2.0.0 is a major upgrade that introduces phrase detection, automatic severity levels, async lifecycle events, a detailed analyze() API, and custom rule support. The internal rule engine has been redesigned for clarity and flexibility while remaining fully backward‑compatible with the original isBlocked() function.
 
-License
+## License
 
 This project is released under the MIT License.
