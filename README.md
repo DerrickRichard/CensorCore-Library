@@ -1,166 +1,149 @@
-CensorCore
+CensorCore 
 ==========
-<p><strong><span style="color:red">⚠️ WARNING: The <code>wordlist.json</code> file contains explicit language, slurs, and other harmful content. View it at your own risk.</span></strong></p>
-<hr>
-CensorCore is a lightweight JavaScript library for detecting explicit or inappropriate text using a centralized JSON wordlist. It is designed for straightforward integration: include a single script tag and call one function within your message handling logic. CensorCore is suitable for chat applications, comment systems, forms, or any environment where user generated text requires screening.
+
+⚠️ WARNING: The `wordlist.json` file contains explicit language, slurs, and other harmful content. View it at your own risk.
+
+CensorCore is a lightweight JavaScript library for detecting explicit, harmful, or inappropriate text using a centralized JSON wordlist. It is designed for straightforward integration: include a single script tag and call one function within your message‑handling logic.
+
+Version 2.0 introduces a more advanced moderation engine with phrase detection, severity levels, async loading events, and a detailed `analyze()` API, while remaining fully backward‑compatible with the original `isBlocked()` function. CensorCore is suitable for chat applications, comment systems, forms, or any environment where user‑generated text requires screening.
 
 Features
---------
 
--   Zero configuration setup
-
--   Shared JSON wordlist loaded from CDN
-
--   Efficient whole word matching
-
--   Minimal and predictable API
-
--   No DOM modification or event interception
-
--   Full control retained by the integrating developer
+- Zero‑configuration setup - Shared JSON wordlist loaded from CDN - Phrase detection (supports multi‑word entries) - Automatic severity mapping based on category - Minimal and predictable API (isBlocked + analyze) - Async lifecycle events (onReady, onError) - Optional custom rule extension - No DOM modification or event interception - Full control retained by the integrating developer
 
 Installation
-------------
 
-To install CensorCore, include the script tag in the <head> tag of your HTML file to ensure it loads before your application code runs:
+To install CensorCore, include the script tag in the `<head>` of your HTML file to ensure it loads before your application code runs:
 
-`<script src="https://cdn.jsdelivr.net/gh/DerrickRichard/CensorCore-Library@latest/CensorCore.js"></script>`
+Code
 
-The library will load after your code runs if you put it near the closing `<html>` tag, causing it to fail.
-
-After the script loads, a global object named censor will be available for use in your JavaScript.
-
-Make sure your internet connection allows loading scripts from the CDN[  ](https://cdn.jsdelivr.net)[cdn.jsdelivr.net](http://cdn.jsdelivr.net).
-
-Inside your logic to send messages, add this inside the function:
-
-```JavaScript
-//Block explicit messages using the CensorCore library
-
-     if  (censor.isBlocked(text))  {
-
-        alert("Message blocked: Inappropriate Content");
-
-        return;
-
-     }
 ```
-Your entire send function should look similar to this:
+<script src="https://cdn.jsdelivr.net/gh/DerrickRichard/CensorCore-Library@latest/CensorCore.js"></script>
 
-```JavaScript
-function  sendMessage()  {
-
-      const  text  =  input.value;
-
-      // Block explicit messages using the CensorCore library
-
-      if  (censor.isBlocked(text))  {
-
-        alert("Message blocked: Inappropriate Content");
-
-        return;
-
-      }
-
-      addMessage(text);
-
-      input.value  =  '';
-
-      input.focus();
-
-    }
 ```
 
-If you prefer, you can download the script and host it locally by cloning the repository or downloading the file directly, then updating the script src attribute accordingly.
+If you place the script near the closing `</html>` tag, the library may load after your code runs, which can prevent the wordlist from initializing correctly.
 
-Example of local hosting:
+After the script loads, a global object named `censor` will be available for use in your JavaScript.
 
-`<script src="path/to/CensorCore.js"></script>`
+Make sure your internet connection allows loading scripts from the CDN at:
 
-This setup requires no additional configuration and works out of the box.
+https://cdn.jsdelivr.net
 
-Usage
------
+Basic Integration
 
-Call `censor.isBlocked(text)` before sending or processing a message. Integrate this check into your message sending logic to prevent inappropriate content from being sent.
+Inside your message‑sending logic, add this check:
 
-Example:
+JavaScript
 
-```JavaScript
-function  sendMessage()  {
-
-  const  text  =  input.value;
-
-  //  Check  if  the  message  contains  blocked  words
-
-  if  (censor.isBlocked(text))  {
-
-    alert("Message  blocked:  Inappropriate  Content");
-
-    return;  //  Prevent  sending  the  message
-
-  }
-
-  //  Proceed  with  sending  the  message
-
-  addMessage(text);
-
+```
+// Block explicit messages using the CensorCore library
+if (censor.isBlocked(text)) {
+    alert("Message blocked: Inappropriate Content");
+    return;
 }
+
 ```
 
-In your sending logic, ensure you `call censor.isBlocked(text)` with the message text before actually sending or processing it. If it returns true, block the message and notify the user accordingly. You are able to adjust the alert content to your preferences.
+A full example:
+
+JavaScript
+
+```
+function sendMessage() {
+    const text = input.value;
+
+    // Block explicit messages using the CensorCore library
+    if (censor.isBlocked(text)) {
+        alert("Message blocked: Inappropriate Content");
+        return;
+    }
+
+    addMessage(text);
+    input.value = '';
+    input.focus();
+}
+
+```
+
+Advanced Usage (Version 2.0)
+
+Use the new `analyze()` API for detailed moderation results:
+
+JavaScript
+
+```
+const result = censor.analyze(text);
+
+if (result.blocked) {
+    console.log("Blocked severity:", result.severity);
+    console.log("Category:", result.category);
+    console.log("Matches:", result.matches);
+}
+
+```
+
+Custom Rules
+
+You can add your own rules without modifying the main wordlist:
+
+JavaScript
+
+```
+censor.extend([
+    { text: "my custom phrase", category: "custom", severity: "medium" }
+]);
+
+```
 
 Wordlist Structure
-------------------
 
-CensorCore loads a JSON file structured by category:
+CensorCore loads a JSON file structured by category. Your actual wordlist includes categories such as:
 
-```json
-{
+profanity hate_speech harassment sexual_content violence self_harm drugs weapons extremism terrorism disallowed_phrases custom
 
-"profanity": ["word1",  "word2"],
+Each category is automatically assigned a severity level (low, medium, or high). All categories are merged into a single internal rule engine.
 
-"hate_speech": ["word3",  "word4"],
-
-"harassment": ["word5",  "word6"]
-
-}
-```
-
-All categories are automatically merged into a single internal list. The CensorCore word list is curated solely by Derrick Richard to ensure consistency and quality. Community members cannot directly edit the word list. To request a new word or phrase, please submit a request in the Word Request section of the repository's Discussions page.
+The CensorCore wordlist is curated solely by Derrick Richard to ensure consistency and quality. Community members cannot directly edit the wordlist. To request a new word or phrase, please use the Word Request section in the repository's Discussions page.
 
 API Reference
--------------
 
-### censor.isBlocked(text: string): boolean
+censor.isBlocked(text) Returns true if the text contains any blocked content.
 
-Returns true if the provided text contains any banned words. Returns false otherwise.
+censor.analyze(text) Returns a detailed moderation result including: - whether the text is blocked - highest severity - category - all matched rules
+
+censor.extend(rules) Adds custom moderation rules at runtime.
+
+censor.isReady() Returns true when the wordlist has finished loading.
+
+censor.isFailed() Returns true if the wordlist failed to load.
+
+censor.onReady(callback) Fires when the moderation engine is ready.
+
+censor.onError(callback) Fires if the moderation engine fails to load.
 
 Design Philosophy
------------------
 
-CensorCore intentionally avoids modifying the host page's DOM, intercepting events, or altering user interface behavior. Instead, it provides a clear and predictable function that developers can integrate into their own message--handling logic. This approach ensures transparency, stability, and compatibility across a wide range of applications.
+CensorCore avoids modifying the DOM, intercepting events, or altering UI behavior. Instead, it provides a predictable, developer‑controlled moderation function. This ensures transparency, stability, and compatibility across a wide range of applications.
 
 About the Developer
--------------------
 
-CensorCore was created and is maintained by Derrick Richard, a high school developer focused on building practical, lightweight tools for the web. He publishes weekly programming articles on[  dev.to](https://dev.to), which can be found at:
+CensorCore was created and is maintained by Derrick Richard, a high school developer focused on building practical, lightweight tools for the web.
 
-<https://dev.to/derrickrichard/>
+He publishes weekly programming articles at: https://dev.to/derrickrichard/
 
-More information about his work and background is available on his personal profile:
+More information about his work is available at: https://derrickrichard.github.io/profile/
 
-<https://derrickrichard.github.io/profile/>
-
-The CensorCore word list is curated solely by Derrick Richard to ensure consistency and quality. Community members cannot directly edit the word list. To request a new word or phrase, please submit a request in the Word Request section of the repository's Discussions page.
+The CensorCore wordlist is curated solely by Derrick Richard to ensure consistency and quality. Community members cannot directly edit the wordlist. To request a new word or phrase, please submit a request in the Word Request section of the repository's Discussions page.
 
 Versions
---------
 
--   v1.0.0: Initial release with basic filtering functionality and a basic JSON wordlist.
--   v1.1.0: CensorCore v1.1.0 makes the filtering engine faster and more dependable. The wordlist is now processed ahead of time, the matching is quicker, and the library handles text in a more consistent way. The code has also been cleaned up so it is easier to follow and maintain. This update adds a couple of small helper functions that let you check whether the wordlist has loaded or if something went wrong while loading it. The public API is locked so it cannot be changed by accident, and the library behaves more safely if it is used before it finishes loading. Overall, this release makes CensorCore smoother and more reliable without changing how you already use it.
+v1.0.0 -- Initial release with basic filtering functionality and a basic JSON wordlist.
+
+v1.1.0 -- CensorCore v1.1.0 makes the filtering engine faster and more dependable. The wordlist is now processed ahead of time, the matching is quicker, and the library handles text in a more consistent way. The code has also been cleaned up so it is easier to follow and maintain. This update adds helper functions to check whether the wordlist has loaded or if something went wrong. The public API is locked to prevent accidental modification, and the library behaves more safely if used before loading finishes.
+
+v2.0.0 -- CensorCore v2.0.0 is a major upgrade that introduces phrase detection, automatic severity levels, async lifecycle events, a detailed analyze() API, and custom rule support. The internal rule engine has been redesigned for clarity and flexibility while remaining fully backward‑compatible with the original isBlocked() function.
 
 License
--------
 
 This project is released under the MIT License.
