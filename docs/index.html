@@ -148,8 +148,7 @@
       margin: 40px auto;
       background: white;
       padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
     .version-entry {
@@ -259,6 +258,12 @@
       border: 1px solid #ddd;
       color: #333;
     }
+
+    /* Fix: Style for disabled button during loading */
+    button:disabled {
+      background: #888;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 
@@ -327,7 +332,8 @@
 
     <div id="demo-box">
       <input id="demo-input" type="text" placeholder="Type a message..." />
-      <button onclick="sendDemo()">Analyze Message</button>
+      <!-- Fix: Added ID and disabled state initially -->
+      <button id="demo-btn" onclick="sendDemo()" disabled>Loading...</button>
 
       <div id="demo-output" style="margin-top:20px; font-size:18px; font-weight:bold; white-space: pre-wrap;"></div>
     </div>
@@ -496,6 +502,17 @@ censor.extend([
     window.scrollTo({ top: elementPosition - offset, behavior: 'smooth' });
   }
 
+  // Fix: Wait for the library to be ready before enabling functionality
+  if (typeof censor !== 'undefined') {
+    censor.onReady(() => {
+      const btn = document.getElementById("demo-btn");
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = "Analyze Message";
+      }
+    });
+  }
+
   function sendDemo() {
     const input = document.getElementById("demo-input");
     const output = document.getElementById("demo-output");
@@ -508,6 +525,13 @@ censor.extend([
     }
 
     if (typeof censor !== 'undefined') {
+      // Fix: Check if wordlist has finished loading
+      if (!censor.isReady()) {
+        output.textContent = "⌛ Loading wordlist, please wait...";
+        output.style.color = "orange";
+        return;
+      }
+
       const analysis = censor.analyze(text);
       
       if (analysis.blocked) {
