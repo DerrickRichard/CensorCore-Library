@@ -209,14 +209,13 @@
         width: 100%;
       }
 
-      /* Make Docs Nav swipeable on mobile instead of stacking */
       #docs-nav {
         display: flex;
         overflow-x: auto;
         white-space: nowrap;
         -webkit-overflow-scrolling: touch;
         padding: 10px 15px;
-        top: 80px; /* Adjusted for wrapping main nav height */
+        top: 80px; 
       }
 
       #docs-nav::-webkit-scrollbar {
@@ -229,8 +228,6 @@
       }
     }
 
-        /* --- LINK STYLES --- */
-    /* General links in content */
     a {
       color: #0066cc;
       text-decoration: none;
@@ -243,7 +240,6 @@
       text-decoration: underline;
     }
 
-    /* Specific adjustment for links in the dark header */
     header a {
       color: #66b3ff;
     }
@@ -252,24 +248,16 @@
       color: #99ccff;
     }
 
-    /* Keep navigation links white as originally intended */
     nav a {
       color: white;
     }
 
-    /* Style for the GitHub link in the Home section */
     .container a[style*="display:inline-flex"] {
       padding: 8px 12px;
       background: #f0f0f0;
       border-radius: 6px;
       border: 1px solid #ddd;
       color: #333;
-    }
-
-    .container a[style*="display:inline-flex"]:hover {
-      background: #e5e5e5;
-      text-decoration: none;
-      border-color: #bbb;
     }
   </style>
 </head>
@@ -288,50 +276,60 @@
 <div id="home" class="page active">
   <header>
     <img class="logo" src="CensorCore.svg" alt="CensorCore Logo">
-    <h1>CensorCore</h1>
-    <h2>Official Moderation System Of <a href="https://derrickrichard.github.io/CoreChat/" target="_blank" rel="noopener noreferrer">CoreChat</a></h2>
-    <p>A lightweight JavaScript library for filtering explicit or inappropriate text.</p>
+    <h1>CensorCore v2.0</h1>
+    <h2>
+      Official Moderation System Of 
+      <a href="https://derrickrichard.github.io/CoreChat/" target="_blank" rel="noopener noreferrer">
+        CoreChat
+      </a>
+    </h2>
+    <p>A high-performance JavaScript library for advanced content filtering and severity analysis.</p>
   </header>
 
   <div class="container">
     <h2>Overview</h2>
     <p>
-      CensorCore is a lightweight JavaScript library for detecting explicit or inappropriate text
-      using a centralized JSON wordlist. It integrates with a single script tag and one function call.
+      CensorCore is a lightweight JavaScript library for detecting explicit or inappropriate text. 
+      Version 2.0 introduces <strong>Severity Levels</strong>, <strong>Phrase Detection</strong>, and a rich 
+      <strong>Analysis API</strong> to give developers granular control over moderation.
     </p>
 
     <h3>Features</h3>
     <ul>
-      <li>Zero configuration setup</li>
-      <li>Shared JSON wordlist loaded from CDN</li>
-      <li>Efficient whole‑word matching</li>
-      <li>Minimal and predictable API</li>
-      <li>No DOM modification or event interception</li>
-      <li>Full control retained by the integrating developer</li>
+      <li><strong>Severity Mapping</strong>: Categorizes hits as Low, Medium, or High.</li>
+      <li><strong>Phrase Detection</strong>: Matches multi-word phrases, not just single words.</li>
+      <li><strong>Custom Rules</strong>: Extend the wordlist dynamically via <code>censor.extend()</code>.</li>
+      <li><strong>Analysis API</strong>: Get detailed reports on why a message was blocked.</li>
+      <li><strong>Async Events</strong>: Use <code>onReady</code> and <code>onError</code> for robust initialization.</li>
+      <li>Shared JSON wordlist loaded from high-speed CDN.</li>
     </ul>
 
     <p>
-  View the full project on GitHub:
-  <br>
-  <a href="https://github.com/DerrickRichard/CensorCore-Library" target="_blank" style="display:inline-flex; align-items:center; gap:8px; margin-top: 10px;">
-    <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="30" alt="GitHub Logo">
-    <span>CensorCore Repository</span>
-  </a>
-</p>
+      View the full project on GitHub:
+      <br>
+      <a href="https://github.com/DerrickRichard/CensorCore-Library" 
+         target="_blank" 
+         style="display:inline-flex; align-items:center; gap:8px; margin-top: 10px;">
+        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" 
+             width="30" 
+             alt="GitHub Logo">
+        <span>CensorCore Repository</span>
+      </a>
+    </p>
   </div>
 </div>
 
 <!-- DEMO PAGE -->
 <div id="demo" class="page">
   <div class="container">
-    <h2>Live Demo</h2>
-    <p>Type a message below. If it contains a blocked word, it will be rejected.</p>
+    <h2>Live Demo (v2.0)</h2>
+    <p>Type a message. CensorCore will analyze the text and return the highest severity detected.</p>
 
     <div id="demo-box">
       <input id="demo-input" type="text" placeholder="Type a message..." />
-      <button onclick="sendDemo()">Send Message</button>
+      <button onclick="sendDemo()">Analyze Message</button>
 
-      <div id="demo-output" style="margin-top:20px; font-size:18px; font-weight:bold;"></div>
+      <div id="demo-output" style="margin-top:20px; font-size:18px; font-weight:bold; white-space: pre-wrap;"></div>
     </div>
   </div>
 </div>
@@ -340,14 +338,10 @@
 <div id="docs" class="page">
   <div id="docs-nav">
     <a onclick="scrollToSection('overview')">Overview</a>
-    <a onclick="scrollToSection('warning')">Warning</a>
     <a onclick="scrollToSection('features')">Features</a>
     <a onclick="scrollToSection('installation')">Installation</a>
-    <a onclick="scrollToSection('usage')">Usage</a>
+    <a onclick="scrollToSection('api')">API Reference</a>
     <a onclick="scrollToSection('wordlist')">Wordlist</a>
-    <a onclick="scrollToSection('api')">API</a>
-    <a onclick="scrollToSection('design')">Design</a>
-    <a onclick="scrollToSection('developer')">Developer</a>
     <a onclick="scrollToSection('versions')">Versions</a>
     <a onclick="scrollToSection('license')">License</a>
   </div>
@@ -355,147 +349,63 @@
   <div id="docs-container">
 
     <h2 id="warning" style="color:red">
-      ⚠️ WARNING: The <code>wordlist.json</code> file contains explicit language, slurs, and other harmful content. View it at your own risk.
+      ⚠️ WARNING: The <code>wordlist.json</code> file contains explicit language and slurs. View at your own risk.
     </h2>
     <hr>
 
     <h2 id="overview">Overview</h2>
     <p>
-      CensorCore is a lightweight JavaScript library for detecting explicit or inappropriate text using a centralized JSON wordlist.
-      It is designed for straightforward integration: include a single script tag and call one function within your message handling logic.
-      CensorCore is suitable for chat applications, comment systems, forms, or any environment where user‑generated text requires screening.
+      CensorCore v2.0 is designed for modern web apps. It provides a simple <code>isBlocked</code> check for quick logic, and a deep <code>analyze</code> function for applications that need to know the category (e.g., "Hate Speech") or severity of a violation.
     </p>
 
     <h2 id="features">Features</h2>
     <ul>
-      <li>Zero configuration setup</li>
-      <li>Shared JSON wordlist loaded from CDN</li>
-      <li>Efficient whole‑word matching</li>
-      <li>Minimal and predictable API</li>
-      <li>No DOM modification or event interception</li>
-      <li>Full control retained by the integrating developer</li>
+      <li>Whole-word and multi-word phrase matching.</li>
+      <li>Automated severity scoring (Low/Medium/High).</li>
+      <li>Non-destructive: No DOM modification.</li>
+      <li>Zero-setup: Loads default wordlist automatically from GitHub.</li>
     </ul>
 
     <h2 id="installation">Installation</h2>
-    <p>
-      To install CensorCore, include the script tag in the <code>&lt;head&gt;</code> of your HTML file to ensure it loads before your application code:
-    </p>
-
     <pre>&lt;script src="https://cdn.jsdelivr.net/gh/DerrickRichard/CensorCore-Library@latest/CensorCore.js"&gt;&lt;/script&gt;</pre>
 
-    <p>
-      The library will load <strong>after</strong> your code if you place it near the closing <code>&lt;/html&gt;</code> tag, causing it to fail.
-      After the script loads, a global object named <code>censor</code> becomes available.
-    </p>
+    <h2 id="api">API Reference</h2>
+    
+    <h3>censor.isBlocked(text)</h3>
+    <p>Quick check. Returns <code>true</code> if any inappropriate content is found.</p>
 
-    <p>
-      Make sure your internet connection allows loading scripts from the CDN:
-      <a href="https://cdn.jsdelivr.net" target="_blank">cdn.jsdelivr.net</a>.
-    </p>
-
-    <p>Inside your message‑sending logic, add:</p>
-
+    <h3>censor.analyze(text)</h3>
+    <p>Returns a detailed object:</p>
     <pre>
-// Block explicit messages using the CensorCore library
-if (censor.isBlocked(text)) {
-  alert("Message blocked: Inappropriate Content");
-  return;
-}
-    </pre>
-
-    <p>Your full send function may look like this:</p>
-
-    <pre>
-function sendMessage() {
-  const text = input.value;
-
-  // Block explicit messages using the CensorCore library
-  if (censor.isBlocked(text)) {
-    alert("Message blocked: Inappropriate Content");
-    return;
-  }
-
-  addMessage(text);
-  input.value = '';
-  input.focus();
-}
-    </pre>
-
-    <p>
-      You may also host the script locally:
-    </p>
-
-    <pre>&lt;script src="path/to/CensorCore.js"&gt;&lt;/script&gt;</pre>
-
-    <p>This setup requires no additional configuration and works out of the box.</p>
-
-    <h2 id="usage">Usage</h2>
-    <p>Call <code>censor.isBlocked(text)</code> before sending or processing a message.</p>
-
-    <pre>
-function sendMessage() {
-  const text = input.value;
-
-  // Check if the message contains blocked words
-  if (censor.isBlocked(text)) {
-    alert("Message blocked: Inappropriate Content");
-    return; // Prevent sending the message
-  }
-
-  // Proceed with sending the message
-  addMessage(text);
-}
-    </pre>
-
-    <p>
-      Ensure you call <code>censor.isBlocked(text)</code> before sending or processing the message.
-      If it returns <code>true</code>, block the message and notify the user.
-    </p>
-
-    <h2 id="wordlist">Wordlist Structure</h2>
-    <p>CensorCore loads a JSON file structured by category:</p>
-
-    <pre>{
-  "profanity": ["word1", "word2"],
-  "hate_speech": ["word3", "word4"],
-  "harassment": ["word5", "word6"]
+{
+  blocked: true,
+  severity: "high",
+  category: "hate_speech",
+  matches: [{ text: "word", category: "...", severity: "..." }]
 }</pre>
 
-    <p>
-      All categories are automatically merged into a single internal list.
-      The wordlist is curated solely by Derrick Richard to ensure consistency and quality.
-      Community members cannot directly edit the list; requests may be submitted via the repository’s Discussions page.
-    </p>
+    <h3>censor.extend(customRules)</h3>
+    <p>Add your own words or phrases locally:</p>
+    <pre>
+censor.extend([
+  { text: "customword", category: "custom", severity: "medium" }
+]);</pre>
 
-    <h2 id="api">API Reference</h2>
-    <h3>censor.isBlocked(text: string): boolean</h3>
-    <p>Returns <code>true</code> if the provided text contains any banned words. Returns <code>false</code> otherwise.</p>
+    <h3>censor.onReady(callback)</h3>
+    <p>Executes logic as soon as the wordlist is loaded.</p>
 
-    <h2 id="design">Design Philosophy</h2>
-    <p>
-      CensorCore intentionally avoids modifying the host page’s DOM, intercepting events, or altering UI behavior.
-      Instead, it provides a clear and predictable function that developers can integrate into their own message‑handling logic.
-      This ensures transparency, stability, and compatibility across a wide range of applications.
-    </p>
-
-    <h2 id="developer">About the Developer</h2>
-    <p>
-      CensorCore was created and is maintained by Derrick Richard, a high‑school developer focused on building practical, lightweight tools for the web.
-      He publishes weekly programming articles on <a href="https://dev.to/derrickrichard" target="_blank">dev.to</a>.
-      More information is available on his personal profile:
-    </p>
-
-    <p><a href="https://derrickrichard.github.io/profile/" target="_blank">https://derrickrichard.github.io/profile/</a></p>
+    <h2 id="wordlist">Wordlist Categories</h2>
+    <p>The system supports categories including: <code>profanity</code>, <code>hate_speech</code>, <code>harassment</code>, <code>sexual_content</code>, <code>violence</code>, <code>drugs</code>, <code>weapons</code>, and <code>extremism</code>.</p>
 
     <h2 id="versions">Versions</h2>
     <ul>
-      <li><strong>v1.0.0</strong>: Initial release with basic filtering functionality and a basic JSON wordlist.</li>
-      <li><strong>v1.1.0</strong>: Faster and more dependable filtering engine. Preprocessed wordlist, improved matching, safer behavior before load, locked public API, and cleaner internal code.</li>
+      <li><strong>v2.0.0</strong>: Major update. Added severity levels, phrase detection, custom rules, and the <code>analyze()</code> API.</li>
+      <li><strong>v1.1.0</strong>: Improved matching engine and performance updates.</li>
+      <li><strong>v1.0.0</strong>: Initial release.</li>
     </ul>
 
     <h2 id="license">License</h2>
     <p>Released under the MIT License.</p>
-
   </div>
 </div>
 
@@ -503,24 +413,52 @@ function sendMessage() {
 <div id="versionspage" class="page">
   <div id="versions-container">
     <h2>Version History</h2>
-    <p>All published versions of CensorCore.</p>
 
     <div class="version-entry">
-      <h3>v1.0.0 - Initial Release</h3>
-      <p>Initial release with basic filtering functionality and a basic JSON wordlist.</p>
-      <a href="https://github.com/DerrickRichard/CensorCore-Library/releases/tag/v1.0.0" target="_blank">
+      <h3>v2.0.0 - The Analysis Update</h3>
+      <p>
+        A major overhaul of the library. Introduces phrase detection, severity levels
+        (Low, Medium, High), and a rich analysis API. Developers can now see exactly
+        why a message was blocked. Adds support for custom rules via
+        <code>censor.extend()</code> and async loading events.
+      </p>
+      <a href="https://github.com/DerrickRichard/CensorCore-Library/releases/tag/v2.0.0" target="_blank">
         View Release on GitHub
       </a>
     </div>
-     <div class="version-entry">
-      <h3>v1.1.0 - Performance and Reliability Update</h3>
-      <p>CensorCore v1.1.0 makes the filtering engine faster and more dependable. The wordlist is now processed ahead of time, the matching is quicker, and the library handles text in a more consistent way. The code has also been cleaned up so it is easier to follow and maintain.
 
-This update adds a couple of small helper functions that let you check whether the wordlist has loaded or if something went wrong while loading it. The public API is locked so it cannot be changed by accident, and the library behaves more safely if it is used before it finishes loading. Overall, this release makes CensorCore smoother and more reliable without changing how you already use it.</p>
+    <div class="version-entry">
+      <h3>v1.1.0 - Performance and Reliability Update</h3>
+      <p>
+        CensorCore v1.1.0 makes the filtering engine faster and more dependable. The
+        wordlist is now processed ahead of time, the matching is quicker, and the
+        library handles text in a more consistent way. The code has also been cleaned
+        up so it is easier to follow and maintain. This update adds a couple of small
+        helper functions that let you check whether the wordlist has loaded or if
+        something went wrong while loading it. The public API is locked so it cannot
+        be changed by accident, and the library behaves more safely if it is used
+        before it finishes loading. Overall, this release makes CensorCore smoother
+        and more reliable without changing how you already use it.
+      </p>
+
       <a href="https://github.com/DerrickRichard/CensorCore-Library/releases/tag/v1.1.0" target="_blank">
         View Release on GitHub
       </a>
+
     </div>
+
+    <div class="version-entry">
+      <h3>v1.0.0 - Initial Release</h3>
+      <p>
+        Initial release with basic filtering functionality and a basic JSON wordlist.
+      </p>
+
+      <a href="https://github.com/DerrickRichard/CensorCore-Library/releases/tag/v1.0.0" target="_blank">
+        View Release on GitHub
+      </a>
+
+    </div>
+
   </div>
 </div>
 
@@ -528,22 +466,10 @@ This update adds a couple of small helper functions that let you check whether t
 <div id="dev-page" class="page">
   <div class="container">
     <h2>About the Developer</h2>
-    <p>
-      <strong>Derrick Richard</strong> is a student developer from Poth, Texas (Class of 2029)
-      who specializes in building lightweight, practical web tools.
-    </p>
-
-    <h3>Programming Focus</h3>
-    <ul>
-      <li><strong>Languages:</strong> JavaScript, HTML, CSS, Java, Python, JSON</li>
-      <li><strong>Strengths:</strong> UI logic, lightweight libraries</li>
-    </ul>
-
-    <h3>Links</h3>
+    <p><strong>Derrick Richard</strong> is a student developer from Poth, Texas specializing in lightweight, practical web tools.</p>
     <ul>
       <li><a href="https://dev.to/derrickrichard" target="_blank">dev.to Articles</a></li>
       <li><a href="https://github.com/DerrickRichard" target="_blank">GitHub Profile</a></li>
-      <li><a href="https://derrickrichard.github.io/profile/" target="_blank">Personal Profile</a></li>
     </ul>
   </div>
 </div>
@@ -567,12 +493,7 @@ This update adds a couple of small helper functions that let you check whether t
     const bodyRect = document.body.getBoundingClientRect().top;
     const elementRect = element.getBoundingClientRect().top;
     const elementPosition = elementRect - bodyRect;
-    const offsetPosition = elementPosition - offset;
-
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: 'smooth'
-    });
+    window.scrollTo({ top: elementPosition - offset, behavior: 'smooth' });
   }
 
   function sendDemo() {
@@ -586,13 +507,19 @@ This update adds a couple of small helper functions that let you check whether t
       return;
     }
 
-    if (typeof censor !== 'undefined' && censor.isBlocked(text)) {
-      output.textContent = "✖ Message blocked: Inappropriate Content";
-      output.style.color = "red";
-      return;
+    if (typeof censor !== 'undefined') {
+      const analysis = censor.analyze(text);
+      
+      if (analysis.blocked) {
+        output.innerHTML = `✖ <strong>Blocked</strong>\n` +
+                         `Severity: <span style="text-transform: capitalize">${analysis.severity}</span>\n` +
+                         `Category: <span style="text-transform: capitalize">${analysis.category.replace('_', ' ')}</span>`;
+        output.style.color = analysis.severity === 'high' ? "red" : "orange";
+        return;
+      }
     }
 
-    output.textContent = "✔ Message sent: " + text;
+    output.textContent = "✔ Message Clean: " + text;
     output.style.color = "green";
     input.value = "";
   }
