@@ -1,56 +1,95 @@
 // CensorCore.js
-// Copyright (c) 2026 Derrick Richard
+// Copyright (c) 2025 Derrick Richard
 // Lightweight, zero-setup message filtering library.
 // Source: https://github.com/DerrickRichard/CensorCore-Library
-// Source: https://github.com/DerrickRichard/CensorCore-Moderation-API
 // Licensed under the MIT License
 // Author: Derrick Richard (https://derrickrichard.github.io/profile/)
 // Weekly programming articles: https://dev.to/derrickrichard
-// v3.0 — Switched to a Python API to detect profane phrases. Removed the wordlist.json file.
+// v2.0 — Adds severity levels, phrase detection, custom rules, async events, and rich analyze() API.
 
 (function () {
+  let rules = [];
   let ready = false;
   let loadFailed = false;
   const readyCallbacks = [];
   const errorCallbacks = [];
 
-  // URL of your moderation API
-  const API_URL = "http://localhost:8000/analyze"; // Change for production
+  // Default severity mapping for categories
+  const CATEGORY_SEVERITY = {
+    profanity: "medium",
+    hate_speech: "high",
+    harassment: "medium",
+    sexual_content: "high",
+    violence: "high",
+    self_harm: "high",
+    drugs: "medium",
+    weapons: "high",
+    extremism: "high",
+    terrorism: "high",
+    disallowed_phrases: "medium",
+    custom: "low",
+    default: "low"
+  };
 
   // Public API
   const censor = {
-    async isBlocked(text) {
-      const result = await this.analyze(text);
-      return result.blocked;
+    isBlocked(text) {
+      return this.analyze(text).blocked;
     },
 
-    async analyze(text) {
+    analyze(text) {
       if (!ready || !text) {
         return { blocked: false, matches: [] };
       }
 
-      try {
-        const response = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text })
-        });
+      const normalized = normalizeText(text);
+      const matches = [];
 
-        if (!response.ok) {
-          throw new Error("API returned non-OK status");
+      for (const rule of rules) {
+        if (rule.pattern.test(normalized)) {
+          matches.push({
+            text: rule.text,
+            category: rule.category,
+            severity: rule.severity
+          });
         }
+      }
 
-        const data = await response.json();
+      if (matches.length === 0) {
+        return { blocked: false, matches: [] };
+      }
 
-        return {
-          blocked: data.blocked,
-          reason: data.reason,
-          confidence: data.confidence,
-          categories: data.categories
-        };
-      } catch (err) {
-        console.error("CensorCore: API error", err);
-        return { blocked: false, error: true };
+      const severityOrder = { low: 1, medium: 2, high: 3 };
+      const highest = matches.reduce((a, b) =>
+        (severityOrder[b.severity] || 1) > (severityOrder[a.severity] || 1)
+          ? b
+          : a
+      );
+
+      return {
+        blocked: true,
+        severity: highest.severity,
+        category: highest.category,
+        matches
+      };
+    },
+
+    extend(customRules) {
+      if (!Array.isArray(customRules)) return;
+
+      for (const r of customRules) {
+        if (!r || !r.text) continue;
+
+        const text = String(r.text).toLowerCase();
+        const category = r.category || "custom";
+        const severity = r.severity || CATEGORY_SEVERITY[category] || "low";
+
+        rules.push({
+          text,
+          category,
+          severity,
+          pattern: buildPattern(text)
+        });
       }
     },
 
@@ -77,13 +116,55 @@
 
   window.censor = Object.freeze(censor);
 
-  // Immediately ready — no wordlist to load
-  try {
-    ready = true;
-    readyCallbacks.forEach(cb => cb());
-  } catch (err) {
-    loadFailed = true;
-    errorCallbacks.forEach(cb => cb(err));
+  // Load JSON wordlist
+  fetch("https://cdn.jsdelivr.net/gh/DerrickRichard/CensorCore-Library@main/wordlist.json")
+    .then(res => res.json())
+    .then(data => {
+      const newRules = [];
+
+      for (const [category, list] of Object.entries(data || {})) {
+        const severity =
+          CATEGORY_SEVERITY[category] || CATEGORY_SEVERITY.default;
+
+        if (!Array.isArray(list)) continue;
+
+        for (const entry of list) {
+          if (!entry) continue;
+
+          const text = String(entry).toLowerCase();
+
+          newRules.push({
+            text,
+            category,
+            severity,
+            pattern: buildPattern(text)
+          });
+        }
+      }
+
+      rules = newRules;
+      ready = true;
+      readyCallbacks.forEach(cb => cb());
+    })
+    .catch(err => {
+      loadFailed = true;
+      errorCallbacks.forEach(cb => cb(err));
+      console.error("CensorCore: Could not load wordlist.json", err);
+    });
+
+  function normalizeText(text) {
+    return String(text)
+      .trim()
+      .toLowerCase()
+      .normalize("NFKC");
+  }
+
+  function buildPattern(text) {
+    const escaped = escapeRegex(text);
+    return new RegExp("\\b" + escaped + "\\b", "i");
+  }
+
+  function escapeRegex(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
 })();
-
